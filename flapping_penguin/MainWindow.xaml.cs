@@ -27,7 +27,7 @@ namespace flapping_penguin
         private BitmapImage normalImage;
         private BitmapImage actionImage;
 
-        private const int ActionDelayMilliseconds = 50; // アクション時の画像を表示する時間（ミリ秒）
+        private const int ActionDelayMilliseconds = 100; // アクション時の画像を表示する時間（ミリ秒）
 
         public MainWindow()
         {
@@ -55,10 +55,19 @@ namespace flapping_penguin
 
         // 何らかのキーが「押された瞬間」に動く処理
         // （※WPFの機能と名前が被るため、System.Windows.Forms.KeyEventArgs と長めに書いています）
-        private void OnKeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+        private async void OnKeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
         {
             // Visual Studioの出力ウィンドウに文字を出します
             System.Diagnostics.Debug.WriteLine("↓ キーが押されました");
+
+            // 1. アクション時の画像（キーを叩いた状態）に変更
+            CatImage.Source = actionImage;
+
+            // 2. 指定したミリ秒（ここでは50ms）だけ待機。この間も画面は固まりません。
+            await Task.Delay(ActionDelayMilliseconds);
+
+            // 3. 元の画像（待機状態）に戻す
+            CatImage.Source = normalImage;
         }
 
         // 何らかのキーが「離された瞬間」に動く処理
@@ -93,7 +102,7 @@ namespace flapping_penguin
             // 1. アクション時の画像（キーを叩いた状態）に変更
             CatImage.Source = actionImage;
 
-            // 2. 指定したミリ秒（ここでは50ms）だけ待機。この間も画面は固まりません。
+            // 2. 指定したミリ秒だけ待機。この間も画面は固まりません。
             await Task.Delay(ActionDelayMilliseconds);
 
             // 3. 元の画像（待機状態）に戻す
