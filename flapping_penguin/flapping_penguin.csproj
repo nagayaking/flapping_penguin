@@ -94,5 +94,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\penguin-L-up-R-down.png" />
+    <Resource Include="Images\penguin-LR-down.png" />
+    <Resource Include="Images\penguin-LR-up.png" />
+    <Resource Include="Images\penguin-R-up-L-down.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
