@@ -5,9 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:flapping_penguin"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow"
+        Height="40" Width="200"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Topmost="True"
+        ShowInTaskbar="False"
+        ResizeMode="NoResize"
+        Loaded="Window_Loaded">
     <Grid>
-     
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
             <!-- ここに x:Name="CatImage" があることで、C#側から操作できるようになります -->
             <Image x:Name="CatImage" Width="300" Height="300" />

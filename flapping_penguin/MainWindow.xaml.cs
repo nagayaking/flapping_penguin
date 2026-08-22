@@ -108,5 +108,12 @@ namespace flapping_penguin
             // 3. 元の画像（待機状態）に戻す
             CatImage.Source = normalImage;
         }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            var workArea = SystemParameters.WorkArea;
+            Left = workArea.Right - Width;
+            Top = workArea.Bottom - Height;
+        }
     }
 }

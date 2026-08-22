@@ -100,10 +100,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="test2.jpg" />
-  </ItemGroup>
-  <ItemGroup>
+    <Resource Include="Images\penguin-L-up-R-down.png" />
+    <Resource Include="Images\penguin-LR-down.png" />
+    <Resource Include="Images\penguin-LR-up.png" />
+    <Resource Include="Images\penguin-R-up-L-down.png" />
     <Resource Include="test1.jpg" />
+    <Resource Include="test2.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
