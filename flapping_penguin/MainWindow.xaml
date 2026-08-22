@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:flapping_penguin"
         mc:Ignorable="d"
         Title="MainWindow"
-        Height="40" Width="200"
+        Height="450" Width="800"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
