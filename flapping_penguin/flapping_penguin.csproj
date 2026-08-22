@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F943D3C4-150E-4055-AB4D-E82A142EE17E}</ProjectGuid>
+    <ProjectGuid>{B75EBFC9-CAA2-7071-87C6-A0C4466CBF55}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>flapping_penguin</RootNamespace>
     <AssemblyName>flapping_penguin</AssemblyName>
