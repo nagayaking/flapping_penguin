@@ -23,6 +23,10 @@ namespace flapping_penguin
     {
         // グローバルキーフックを管理するための変数
         private IKeyboardMouseEvents m_GlobalHook;
+
+        // スクロール検知を管理するための変数
+        private ScrollDetector m_ScrollDetector;
+
         // 画像を毎回読み込むと動作が重くなるため、変数として保持しておきます
         private BitmapImage normalImage;
         private BitmapImage actionImage;
@@ -51,6 +55,30 @@ namespace flapping_penguin
             // キーが押された瞬間、離された瞬間を登録
             m_GlobalHook.KeyDown += OnKeyDown;
             m_GlobalHook.KeyUp += OnKeyUp;
+
+            // スクロール検知の初期化と開始
+            m_ScrollDetector = new ScrollDetector();
+            m_ScrollDetector.OnScrollDetected += ScrollDetector_OnScrollDetected;
+            m_ScrollDetector.Start();
+        }
+
+        // スクロールが検知されたときに呼ばれる処理
+        private void ScrollDetector_OnScrollDetected(int scrollAmount)
+        {
+            // UIスレッドで安全に画面の位置(Left)を変更します
+            Dispatcher.Invoke(() =>
+            {
+                // スクロール量（120や-120）に応じて移動方向を決定します
+                // 数字の30を変更すると、1回のスクロールでの移動幅を調整できます
+                if (scrollAmount > 0)
+                {
+                    this.Left += 30; // 上にスクロールした時は右へ移動
+                }
+                else
+                {
+                    this.Left -= 30; // 下にスクロールした時は左へ移動
+                }
+            });
         }
 
         // 何らかのキーが「押された瞬間」に動く処理
@@ -85,6 +113,12 @@ namespace flapping_penguin
                 m_GlobalHook.KeyDown -= OnKeyDown;
                 m_GlobalHook.KeyUp -= OnKeyUp;
                 m_GlobalHook.Dispose();
+            }
+            if (m_ScrollDetector != null)
+            {
+                m_ScrollDetector.OnScrollDetected -= ScrollDetector_OnScrollDetected;
+                m_ScrollDetector.Stop();
+                m_ScrollDetector = null;
             }
         }
 
