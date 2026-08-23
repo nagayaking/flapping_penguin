@@ -40,8 +40,8 @@ namespace flapping_penguin
             // ウィンドウが開いたときに監視を開始する
             Subscribe();
             // アプリ起動時に画像を一度だけメモリに読み込んでおく
-            normalImage = new BitmapImage(new Uri("Images/penguin-LR-down.png", UriKind.Relative));
-            actionImage = new BitmapImage(new Uri("Images/penguin-LR-up.png", UriKind.Relative));
+            normalImage = new BitmapImage(new Uri("Images/penguin-LR-up.png", UriKind.Relative));
+            actionImage = new BitmapImage(new Uri("Images/penguin-LR-down.png", UriKind.Relative));
 
             // アプリ起動時の初期画像を設定
             CatImage.Source = normalImage;
@@ -81,12 +81,21 @@ namespace flapping_penguin
                 int centerX = (int)(this.Left + (this.Width / 2));
                 int currentY = (int)this.Top;
 
-                // 3. 中心座標が「現在どのモニター上にあるか」を判定する
-                // System.Drawing.Pointを使うため、型の変換を行っています
+                // 3. 中心座標が現在どのモニター上にあるかを判定する
                 var currentScreen = System.Windows.Forms.Screen.FromPoint(new System.Drawing.Point(centerX, currentY));
 
-                // 4. 判定されたモニターの「作業領域（タスクバーを除いた領域）」の底辺に、ウィンドウの底辺を合わせる
-                this.Top = currentScreen.WorkingArea.Bottom - this.Height;
+                // 現在のウィンドウの拡大率（DPIスケーリング）を取得する
+                PresentationSource source = PresentationSource.FromVisual(this);
+                double dpiScaleY = 1.0;
+                if (source != null)
+                {
+                    // モニターの拡大率（125%なら1.25）を取得
+                    dpiScaleY = source.CompositionTarget.TransformToDevice.M22;
+                }
+
+                // 4. 判定されたモニターの「作業領域」の底辺に合わせる
+                // 取得したタスクバーの位置（物理ピクセル）を、拡大率で割り算してWPFのサイズに変換する
+                this.Top = (currentScreen.WorkingArea.Bottom / dpiScaleY) - this.Height;
 
                 // 5. 画面端に到達したときのワープ処理（全モニターの端から端へ）
                 // 接続されている全モニターの中で、一番左の座標と一番右の座標を取得
