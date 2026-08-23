@@ -40,8 +40,8 @@ namespace flapping_penguin
             // ウィンドウが開いたときに監視を開始する
             Subscribe();
             // アプリ起動時に画像を一度だけメモリに読み込んでおく
-            normalImage = new BitmapImage(new Uri("Images/penguin-LR-down.jpg", UriKind.Relative));
-            actionImage = new BitmapImage(new Uri("Images/penguin-LR-up.jpg", UriKind.Relative));
+            normalImage = new BitmapImage(new Uri("Images/penguin-LR-down.png", UriKind.Relative));
+            actionImage = new BitmapImage(new Uri("Images/penguin-LR-up.png", UriKind.Relative));
 
             // アプリ起動時の初期画像を設定
             CatImage.Source = normalImage;
