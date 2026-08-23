@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:flapping_penguin"
         mc:Ignorable="d"
         Title="MainWindow"
-        Height="450" Width="800"
+        Height="150" Width="150"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
@@ -17,9 +17,7 @@
     <Grid>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
             <!-- ここに x:Name="CatImage" があることで、C#側から操作できるようになります -->
-            <Image x:Name="CatImage" Width="300" Height="300" />
-
-            <Button Content="テスト" Width="200" Height="50" Margin="0,20,0,0" Click="TestButton_Click" />
+            <Image x:Name="CatImage" Width="150" Height="150" />
         </StackPanel>
     </Grid>
 </Window>
