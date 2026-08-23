@@ -40,8 +40,8 @@ namespace flapping_penguin
             // ウィンドウが開いたときに監視を開始する
             Subscribe();
             // アプリ起動時に画像を一度だけメモリに読み込んでおく
-            normalImage = new BitmapImage(new Uri("test1.jpg", UriKind.Relative));
-            actionImage = new BitmapImage(new Uri("test2.jpg", UriKind.Relative));
+            normalImage = new BitmapImage(new Uri("Images/penguin-LR-down.jpg", UriKind.Relative));
+            actionImage = new BitmapImage(new Uri("Images/penguin-LR-up.jpg", UriKind.Relative));
 
             // アプリ起動時の初期画像を設定
             CatImage.Source = normalImage;
@@ -65,18 +65,43 @@ namespace flapping_penguin
         // スクロールが検知されたときに呼ばれる処理
         private void ScrollDetector_OnScrollDetected(int scrollAmount)
         {
-            // UIスレッドで安全に画面の位置(Left)を変更します
             Dispatcher.Invoke(() =>
             {
-                // スクロール量（120や-120）に応じて移動方向を決定します
-                // 数字の30を変更すると、1回のスクロールでの移動幅を調整できます
+                // 1. まずは横(Left)に移動させる
                 if (scrollAmount > 0)
                 {
-                    this.Left += 30; // 上にスクロールした時は右へ移動
+                    this.Left += 30;
                 }
                 else
                 {
-                    this.Left -= 30; // 下にスクロールした時は左へ移動
+                    this.Left -= 30;
+                }
+
+                // 2. 現在のウィンドウの中心座標を計算する
+                int centerX = (int)(this.Left + (this.Width / 2));
+                int currentY = (int)this.Top;
+
+                // 3. 中心座標が「現在どのモニター上にあるか」を判定する
+                // System.Drawing.Pointを使うため、型の変換を行っています
+                var currentScreen = System.Windows.Forms.Screen.FromPoint(new System.Drawing.Point(centerX, currentY));
+
+                // 4. 判定されたモニターの「作業領域（タスクバーを除いた領域）」の底辺に、ウィンドウの底辺を合わせる
+                this.Top = currentScreen.WorkingArea.Bottom - this.Height;
+
+                // 5. 画面端に到達したときのワープ処理（全モニターの端から端へ）
+                // 接続されている全モニターの中で、一番左の座標と一番右の座標を取得
+                int minLeft = System.Windows.Forms.Screen.AllScreens.Min(s => s.WorkingArea.Left);
+                int maxRight = System.Windows.Forms.Screen.AllScreens.Max(s => s.WorkingArea.Right);
+
+                if (this.Left > maxRight)
+                {
+                    // 一番右のモニターの右端を越えたら、一番左のモニターの左端へワープ
+                    this.Left = minLeft - this.Width;
+                }
+                else if (this.Left < minLeft - this.Width)
+                {
+                    // 一番左のモニターの左端を越えたら、一番右のモニターの右端へワープ
+                    this.Left = maxRight;
                 }
             });
         }
