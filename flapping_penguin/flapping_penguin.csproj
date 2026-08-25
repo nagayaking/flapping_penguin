@@ -106,6 +106,7 @@
     <Resource Include="Images\penguin-LR-down.png" />
     <Resource Include="Images\penguin-LR-up.png" />
     <Resource Include="Images\penguin-R-up-L-down.png" />
+    <Resource Include="Images\penguin_sliding.png" />
     <Resource Include="test1.jpg" />
     <Resource Include="test2.jpg" />
   </ItemGroup>
