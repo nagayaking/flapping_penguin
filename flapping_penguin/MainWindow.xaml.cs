@@ -73,6 +73,9 @@ namespace flapping_penguin
         // ==============================================
         private async void KeyboardDetector_OnKeyPressed()
         {
+            // 反転状態をリセット（スクロール中に反転していた場合に備えて）
+            CatImageScale.ScaleX = 1;
+
             // ① どちらの羽を上げるか判定して画像を変える
             if (_isRightWingNext)
             {
@@ -108,10 +111,12 @@ namespace flapping_penguin
                 if (scrollAmount > 0)
                 {
                     this.Left += 30;
+                    CatImageScale.ScaleX = -1; // 右へ移動するので画像を反転
                 }
                 else
                 {
                     this.Left -= 30;
+                    CatImageScale.ScaleX = 1; // 左へ移動するので通常向き
                 }
 
                 int centerX = (int)(this.Left + (this.Width / 2));
@@ -157,6 +162,7 @@ namespace flapping_penguin
         {
             m_ScrollStopTimer.Stop();
             CatImage.Source = imgBothDown;
+            CatImageScale.ScaleX = 1; // 反転状態をリセット
         }
 
         // ==============================================
