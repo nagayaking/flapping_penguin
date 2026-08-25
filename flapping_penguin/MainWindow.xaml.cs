@@ -98,18 +98,25 @@ namespace flapping_penguin
                 this.Top = (currentScreen.WorkingArea.Bottom / dpiScaleY) - this.Height;
 
                 // 5. 画面端に到達したときのワープ処理（全モニターの端から端へ）
-                // 接続されている全モニターの中で、一番左の座標と一番右の座標を取得
-                int minLeft = System.Windows.Forms.Screen.AllScreens.Min(s => s.WorkingArea.Left);
-                int maxRight = System.Windows.Forms.Screen.AllScreens.Max(s => s.WorkingArea.Right);
+                // 横方向（X軸）の拡大率を取得します（M11を使用します）
+                double dpiScaleX = 1.0;
+                if (source != null)
+                {
+                    dpiScaleX = source.CompositionTarget.TransformToDevice.M11;
+                }
+
+                // 接続されている全モニターの中で、一番左の座標と一番右の物理座標を取得し、拡大率で論理座標に変換します
+                double minLeft = System.Windows.Forms.Screen.AllScreens.Min(s => s.WorkingArea.Left) / dpiScaleX;
+                double maxRight = System.Windows.Forms.Screen.AllScreens.Max(s => s.WorkingArea.Right) / dpiScaleX;
 
                 if (this.Left > maxRight)
                 {
-                    // 一番右のモニターの右端を越えたら、一番左のモニターの左端へワープ
+                    // 一番右のモニターの右端を完全に越えたら、一番左のモニターの左端（画面外）へワープ
                     this.Left = minLeft - this.Width;
                 }
                 else if (this.Left < minLeft - this.Width)
                 {
-                    // 一番左のモニターの左端を越えたら、一番右のモニターの右端へワープ
+                    // 一番左のモニターの左端を完全に越えたら、一番右のモニターの右端へワープ
                     this.Left = maxRight;
                 }
             });
