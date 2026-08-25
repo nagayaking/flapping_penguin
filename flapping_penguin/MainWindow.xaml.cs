@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 namespace flapping_penguin
 {
@@ -17,11 +18,16 @@ namespace flapping_penguin
         private BitmapImage imgBothUp;   // 両羽上げ
         private BitmapImage imgRightUp;  // 右羽上げ・左羽下げ
         private BitmapImage imgLeftUp;   // 左羽上げ・右羽下げ
+        private BitmapImage imgSliding;  // スクロール中（スライディング）
 
         // 次は右羽を上げる番かどうかを記憶するフラグ
         private bool _isRightWingNext = true;
 
         private const int ActionDelayMilliseconds = 100; // アクション時の画像を表示する時間（ミリ秒）
+        private const int ScrollStopDelayMilliseconds = 200; // スクロールが止まったと判定するまでの時間（ミリ秒）
+
+        // スクロールが止まったことを検知するためのタイマー
+        private DispatcherTimer m_ScrollStopTimer;
 
         public MainWindow()
         {
@@ -32,9 +38,17 @@ namespace flapping_penguin
             imgBothUp = new BitmapImage(new Uri("Images/penguin-LR-up.png", UriKind.Relative));
             imgRightUp = new BitmapImage(new Uri("Images/penguin-R-up-L-down.png", UriKind.Relative));
             imgLeftUp = new BitmapImage(new Uri("Images/penguin-L-up-R-down.png", UriKind.Relative));
+            imgSliding = new BitmapImage(new Uri("Images/penguin_sliding.png", UriKind.Relative));
 
             // アプリ起動時の初期画像を設定（待機中は「両羽下げ」としています）
             CatImage.Source = imgBothDown;
+
+            // スクロール停止検知用タイマーの準備（動かすのはスクロール検知時）
+            m_ScrollStopTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(ScrollStopDelayMilliseconds)
+            };
+            m_ScrollStopTimer.Tick += ScrollStopTimer_Tick;
 
             // 2. 各種監視のスタート
             Subscribe();
@@ -86,6 +100,11 @@ namespace flapping_penguin
         {
             Dispatcher.Invoke(() =>
             {
+                // スライディング中の画像に切り替え、一定時間スクロールがなければ元に戻す
+                CatImage.Source = imgSliding;
+                m_ScrollStopTimer.Stop();
+                m_ScrollStopTimer.Start();
+
                 if (scrollAmount > 0)
                 {
                     this.Left += 30;
@@ -120,6 +139,13 @@ namespace flapping_penguin
                     this.Left = maxRight;
                 }
             });
+        }
+
+        // スクロールが止まってから一定時間経ったときに呼ばれる処理
+        private void ScrollStopTimer_Tick(object sender, EventArgs e)
+        {
+            m_ScrollStopTimer.Stop();
+            CatImage.Source = imgBothDown;
         }
 
         // ==============================================
