@@ -7,13 +7,14 @@ namespace flapping_penguin
     // マルチモニタを考慮したウィンドウ位置移動専用のクラス
     public class WindowMover
     {
-        private const int ScrollMoveStepPixels = 30; // スクロール時にウィンドウを移動させるピクセル数
+        private readonly SettingsController m_SettingsController; // スクロール時にウィンドウを移動させるピクセル数
 
         private readonly Window m_Window;
 
         public WindowMover(Window window)
         {
             m_Window = window;
+            m_SettingsController = new SettingsController();
         }
 
         // 起動時の初期配置（作業領域の右下）
@@ -34,13 +35,15 @@ namespace flapping_penguin
 
         private void MoveHorizontally(ScrollDirection direction)
         {
+            int currentSpeed = m_SettingsController.MovementSpeed;
+
             if (direction == ScrollDirection.Right)
             {
-                m_Window.Left += ScrollMoveStepPixels;
+                m_Window.Left += currentSpeed;
             }
             else
             {
-                m_Window.Left -= ScrollMoveStepPixels;
+                m_Window.Left -= currentSpeed;
             }
         }
 
