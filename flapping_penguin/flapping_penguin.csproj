@@ -62,6 +62,10 @@
     </ApplicationDefinition>
     <Compile Include="KeyboardDetector.cs" />
     <Compile Include="ScrollDetector.cs" />
+    <Compile Include="ScrollDirection.cs" />
+    <Compile Include="PenguinAssets.cs" />
+    <Compile Include="PenguinAnimator.cs" />
+    <Compile Include="WindowMover.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
