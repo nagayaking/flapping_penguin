@@ -8,10 +8,13 @@ namespace flapping_penguin
         // 検知用のクラスを変数として用意
         private ScrollDetector m_ScrollDetector;
         private KeyboardDetector m_KeyboardDetector;
+        private MouseClickDetector m_MouseClickDetector;
 
         private PenguinAssets m_Assets;
         private PenguinAnimator m_Animator;
         private WindowMover m_WindowMover;
+        private PenguinSpeech m_PenguinSpeech;
+        private SettingsController m_SettingsController;
 
         public MainWindow()
         {
@@ -20,6 +23,8 @@ namespace flapping_penguin
             m_Assets = new PenguinAssets();
             m_Animator = new PenguinAnimator(CatImage, CatImageScale, m_Assets);
             m_WindowMover = new WindowMover(this);
+            m_PenguinSpeech = new PenguinSpeech();
+            m_SettingsController = new SettingsController();
 
             // 各種監視のスタート
             Subscribe();
@@ -37,12 +42,41 @@ namespace flapping_penguin
             m_KeyboardDetector = new KeyboardDetector();
             m_KeyboardDetector.OnKeyPressed += KeyboardDetector_OnKeyPressed;
             m_KeyboardDetector.Start();
+
+            // マウスクリック検知の初期化と開始
+            m_MouseClickDetector = new MouseClickDetector();
+            m_MouseClickDetector.OnLeftClicked += MouseClickDetector_OnLeftClicked;
+            m_MouseClickDetector.OnRightClicked += MouseClickDetector_OnRightClicked;
+            m_MouseClickDetector.Start();
         }
 
-        // キーが押されたときの処理（パタパタさせる）
-        private async void KeyboardDetector_OnKeyPressed()
+        // キーが押されたときの処理（キーの種類に応じて動きを変える）
+        private async void KeyboardDetector_OnKeyPressed(System.Windows.Forms.Keys key)
         {
-            await m_Animator.PlayWingFlapAsync();
+            switch (key)
+            {
+                case System.Windows.Forms.Keys.Space:
+                    await m_Animator.PlayJumpAsync();
+                    break;
+                case System.Windows.Forms.Keys.Enter:
+                    await m_Animator.PlayBanzaiAsync();
+                    break;
+                default:
+                    await m_Animator.PlayWingFlapAsync();
+                    break;
+            }
+        }
+
+        // 左クリックされたときの処理（喋る）
+        private void MouseClickDetector_OnLeftClicked()
+        {
+            m_PenguinSpeech.Speak();
+        }
+
+        // 右クリックされたときの処理（設定画面を開く）
+        private void MouseClickDetector_OnRightClicked()
+        {
+            m_SettingsController.OpenSettings();
         }
 
         // スクロールが検知されたときに呼ばれる処理
@@ -73,6 +107,13 @@ namespace flapping_penguin
                 m_KeyboardDetector.OnKeyPressed -= KeyboardDetector_OnKeyPressed;
                 m_KeyboardDetector.Stop();
                 m_KeyboardDetector = null;
+            }
+            if (m_MouseClickDetector != null)
+            {
+                m_MouseClickDetector.OnLeftClicked -= MouseClickDetector_OnLeftClicked;
+                m_MouseClickDetector.OnRightClicked -= MouseClickDetector_OnRightClicked;
+                m_MouseClickDetector.Stop();
+                m_MouseClickDetector = null;
             }
         }
 
