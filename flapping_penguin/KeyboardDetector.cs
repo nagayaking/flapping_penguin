@@ -10,7 +10,7 @@ namespace flapping_penguin
         private IKeyboardMouseEvents m_GlobalHook;
 
         // 別ファイル（MainWindow）にお知らせするためのイベント
-        public event Action OnKeyPressed;
+        public event Action<Keys> OnKeyPressed;
         public event Action OnKeyReleased;
 
         public void Start()
@@ -23,7 +23,7 @@ namespace flapping_penguin
         private void GlobalHook_KeyDown(object sender, KeyEventArgs e)
         {
             // キーが押されたらお知らせを発信
-            OnKeyPressed?.Invoke();
+            OnKeyPressed?.Invoke(e.KeyCode);
         }
 
         private void GlobalHook_KeyUp(object sender, KeyEventArgs e)
