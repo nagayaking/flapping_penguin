@@ -22,7 +22,7 @@ namespace flapping_penguin
         }
 
         // スペースキーでジャンプさせる（重力加速度を使って放物線を描くように動かす）
-        public async Task JumpAsync()
+        public async Task PlayJumpAsync()
         {
             if (m_IsJumping)
             {

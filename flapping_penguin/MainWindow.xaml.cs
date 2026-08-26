@@ -56,7 +56,7 @@ namespace flapping_penguin
             switch (key)
             {
                 case System.Windows.Forms.Keys.Space:
-                    await m_WindowMover.JumpAsync();
+                    await m_WindowMover.PlayJumpAsync();
                     break;
                 case System.Windows.Forms.Keys.Enter:
                     await m_Animator.PlayBanzaiAsync();
