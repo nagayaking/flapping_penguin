@@ -8,7 +8,7 @@ namespace flapping_penguin
     // マルチモニタを考慮したウィンドウ位置移動専用のクラス
     public class WindowMover
     {
-        private const int ScrollMoveStepPixels = 30; // スクロール時にウィンドウを移動させるピクセル数
+        private readonly SettingsController m_SettingsController; // スクロール時にウィンドウを移動させるピクセル数
         private const double JumpInitialVelocity = 900; // ジャンプ初速（ピクセル/秒、上向き）
         private const double JumpGravity = 8000; // ジャンプ中の重力加速度（ピクセル/秒^2）
         private const int JumpFrameIntervalMilliseconds = 16; // ジャンプのアニメーション更新間隔（約60fps）
@@ -19,6 +19,7 @@ namespace flapping_penguin
         public WindowMover(Window window)
         {
             m_Window = window;
+            m_SettingsController = new SettingsController();
         }
 
         // スペースキーでジャンプさせる（重力加速度を使って放物線を描くように動かす）
@@ -74,13 +75,15 @@ namespace flapping_penguin
 
         private void MoveHorizontally(ScrollDirection direction)
         {
+            int currentSpeed = m_SettingsController.MovementSpeed;
+
             if (direction == ScrollDirection.Right)
             {
-                m_Window.Left += ScrollMoveStepPixels;
+                m_Window.Left += currentSpeed;
             }
             else
             {
-                m_Window.Left -= ScrollMoveStepPixels;
+                m_Window.Left -= currentSpeed;
             }
         }
 

@@ -76,12 +76,23 @@ namespace flapping_penguin
         // 右クリックされたときの処理（設定画面を開く）
         private void MouseClickDetector_OnRightClicked()
         {
-            m_SettingsController.OpenSettings();
+            // 設定画面のインスタンスを生成
+            SettingsWindow settingsWin = new SettingsWindow();
+
+            // 親ウィンドウをMainWindowに指定
+            settingsWin.Owner = this;
+
+            // 設定画面をモーダル（手前に固定）で開く
+            settingsWin.ShowDialog();
         }
 
         // スクロールが検知されたときに呼ばれる処理
         private void ScrollDetector_OnScrollDetected(int scrollAmount)
         {
+            if (!m_SettingsController.IsMovementEnabled)
+            {
+                return;
+            }
             Dispatcher.Invoke(() =>
             {
                 var direction = scrollAmount > 0 ? ScrollDirection.Right : ScrollDirection.Left;
