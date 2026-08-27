@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace flapping_penguin
@@ -8,13 +9,52 @@ namespace flapping_penguin
     public class WindowMover
     {
         private readonly SettingsController m_SettingsController; // スクロール時にウィンドウを移動させるピクセル数
+        private const double JumpInitialVelocity = 900; // ジャンプ初速（ピクセル/秒、上向き）
+        private const double JumpGravity = 8000; // ジャンプ中の重力加速度（ピクセル/秒^2）
+        private const int JumpFrameIntervalMilliseconds = 16; // ジャンプのアニメーション更新間隔（約60fps）
 
         private readonly Window m_Window;
+        private bool m_IsJumping; // 連続入力で位置がずれるのを防ぐためのフラグ
 
         public WindowMover(Window window)
         {
             m_Window = window;
             m_SettingsController = new SettingsController();
+        }
+
+        // スペースキーでジャンプさせる（重力加速度を使って放物線を描くように動かす）
+        public async Task PlayJumpAsync()
+        {
+            if (m_IsJumping)
+            {
+                return;
+            }
+
+            m_IsJumping = true;
+
+            double groundTop = m_Window.Top;
+            double velocity = -JumpInitialVelocity; // 上向きをマイナスとして扱う
+            double offset = 0;
+            double deltaTimeSeconds = JumpFrameIntervalMilliseconds / 1000.0;
+
+            // 重力で速度を落としながら移動させ、地面（元の高さ）に戻ってきたら終了
+            while (true)
+            {
+                velocity += JumpGravity * deltaTimeSeconds;
+                offset += velocity * deltaTimeSeconds;
+
+                if (offset >= 0)
+                {
+                    break;
+                }
+
+                m_Window.Top = groundTop + offset;
+                await Task.Delay(JumpFrameIntervalMilliseconds);
+            }
+
+            m_Window.Top = groundTop;
+
+            m_IsJumping = false;
         }
 
         // 起動時の初期配置（作業領域の右下）

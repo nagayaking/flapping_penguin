@@ -61,18 +61,17 @@ namespace flapping_penguin
             m_Image.Source = m_Assets.BothDown;
         }
 
-        // スペースキーでジャンプさせる（担当：いのま）
-        public Task PlayJumpAsync()
+        // エンターキーでバンザイさせる
+        public async Task PlayBanzaiAsync()
         {
-            // TODO: ジャンプアニメーションを実装
-            return Task.CompletedTask;
-        }
+            // 反転状態をリセット（スクロール中に反転していた場合に備えて）
+            m_ImageScale.ScaleX = 1;
 
-        // エンターキーでバンザイさせる（担当：いのま）
-        public Task PlayBanzaiAsync()
-        {
-            // TODO: バンザイアニメーションを実装
-            return Task.CompletedTask;
+            m_Image.Source = m_Assets.BothUp;
+
+            await Task.Delay(ActionDelayMilliseconds);
+
+            m_Image.Source = m_Assets.BothDown;
         }
 
         // スクロール中のスライディング表示に切り替える
