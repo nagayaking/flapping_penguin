@@ -36,8 +36,21 @@ namespace flapping_penguin
             var mainWindow = Application.Current.MainWindow as MainWindow;
             if (mainWindow == null) return;
 
-            // 現在のマウスの画面上の絶対座標を取得
+            // 現在のマウスの画面上の絶対座標（物理ピクセル）を取得
             var mousePos = System.Windows.Forms.Cursor.Position;
+
+            // Window.Left/Top/Width/Heightは論理座標（DIU）なので、
+            // 物理ピクセルとの間でDPIスケーリング分の変換を行う
+            PresentationSource source = PresentationSource.FromVisual(mainWindow);
+            double dpiScaleX = 1.0;
+            double dpiScaleY = 1.0;
+            if (source != null)
+            {
+                dpiScaleX = source.CompositionTarget.TransformToDevice.M11;
+                dpiScaleY = source.CompositionTarget.TransformToDevice.M22;
+            }
+            double mouseLogicalX = mousePos.X / dpiScaleX;
+            double mouseLogicalY = mousePos.Y / dpiScaleY;
 
             // ペンギン（ウィンドウ）の画面上の位置とサイズを取得
             double left = mainWindow.Left;
@@ -46,8 +59,8 @@ namespace flapping_penguin
             double height = mainWindow.Height;
 
             // マウスがペンギンの外側だったら、ここで処理をストップして何もしない
-            if (mousePos.X < left || mousePos.X > left + width ||
-                mousePos.Y < top || mousePos.Y > top + height)
+            if (mouseLogicalX < left || mouseLogicalX > left + width ||
+                mouseLogicalY < top || mouseLogicalY > top + height)
             {
                 return;
             }
