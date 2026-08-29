@@ -25,5 +25,16 @@ namespace flapping_penguin
                 Properties.Settings.Default.Save();
             }
         }
+        public void OpenSettings(System.Windows.Window ownerWindow)
+        {
+            // 設定画面のインスタンスを生成
+            SettingsWindow settingsWin = new SettingsWindow();
+
+            // 親ウィンドウを指定（メイン画面の中央に表示させるため）
+            settingsWin.Owner = ownerWindow;
+
+            // 設定画面をモーダル（手前に固定）で開く
+            settingsWin.ShowDialog();
+        }
     }
 }
