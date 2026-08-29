@@ -1,11 +1,76 @@
+using System;
+using System.Windows;
+using System.Windows.Threading;
+
 namespace flapping_penguin
 {
-    // 左クリックで喋る機能（担当：甲谷）
     public class PenguinSpeech
     {
+        private DispatcherTimer _hideTimer;
+        private Random _random;
+
+        // セリフの候補
+        private readonly string[] _speeches = new string[]
+        {
+            "皇帝ペンギンだからって肯定すると思うなよ",
+            "変化が怖いなら前には進めないぞ",
+            "出会いがあるなら別れがあるのは必然",
+            "自分の弱さを認めろ",
+            "先々見ないで目の前のものに集中しようや",
+            "とりあえず人と話せば何か変わるんちゃう",
+            "早起きできる奴は強い",
+            "どんな時でも感情的になる奴は幼稚",
+            ""
+        };
+
+        public PenguinSpeech()
+        {
+            _random = new Random();
+            _hideTimer = new DispatcherTimer();
+            _hideTimer.Interval = TimeSpan.FromSeconds(2);
+            _hideTimer.Tick += HideTimer_Tick;
+        }
+
         public void Speak()
         {
-            // TODO: 喋る処理を実装
+            var mainWindow = Application.Current.MainWindow as MainWindow;
+            if (mainWindow == null) return;
+
+            // 現在のマウスの画面上の絶対座標を取得
+            var mousePos = System.Windows.Forms.Cursor.Position;
+
+            // ペンギン（ウィンドウ）の画面上の位置とサイズを取得
+            double left = mainWindow.Left;
+            double top = mainWindow.Top;
+            double width = mainWindow.Width;
+            double height = mainWindow.Height;
+
+            // マウスがペンギンの外側だったら、ここで処理をストップして何もしない
+            if (mousePos.X < left || mousePos.X > left + width ||
+                mousePos.Y < top || mousePos.Y > top + height)
+            {
+                return;
+            }
+
+
+            // ここから下は、ペンギンの上でクリックされた時だけ実行されます
+            int index = _random.Next(_speeches.Length);
+
+            mainWindow.SpeechText.Text = _speeches[index];
+            mainWindow.SpeechPopup.IsOpen = true;
+
+            _hideTimer.Stop();
+            _hideTimer.Start();
+        }
+
+        private void HideTimer_Tick(object sender, EventArgs e)
+        {
+            var mainWindow = Application.Current.MainWindow as MainWindow;
+            if (mainWindow != null)
+            {
+                mainWindow.SpeechPopup.IsOpen = false;
+            }
+            _hideTimer.Stop();
         }
     }
 }

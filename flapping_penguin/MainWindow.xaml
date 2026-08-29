@@ -16,12 +16,23 @@
         Loaded="Window_Loaded">
     <Grid>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <!-- ここに x:Name="CatImage" があることで、C#側から操作できるようになります -->
+            <!-- リーダーが用意してくれた画像とアニメーション用のパーツ（そのまま残しています！） -->
             <Image x:Name="CatImage" Width="150" Height="150" RenderTransformOrigin="0.5,0.5">
                 <Image.RenderTransform>
                     <ScaleTransform x:Name="CatImageScale" ScaleX="1" ScaleY="1" />
                 </Image.RenderTransform>
             </Image>
         </StackPanel>
+
+        <Popup x:Name="SpeechPopup" 
+               PlacementTarget="{Binding ElementName=CatImage}" 
+               Placement="Top" 
+               VerticalOffset="-10" 
+               AllowsTransparency="True" 
+               IsOpen="False">
+            <Border Background="White" BorderBrush="#333333" BorderThickness="2" CornerRadius="10" Padding="15,10">
+                <TextBlock x:Name="SpeechText" Text="セリフ" FontSize="14" FontWeight="Bold" Foreground="#333333" />
+            </Border>
+        </Popup>
     </Grid>
 </Window>
