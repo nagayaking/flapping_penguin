@@ -37,5 +37,12 @@ namespace flapping_penguin
             // 画面を閉じる
             this.DialogResult = true;
         }
+
+        // アプリ終了ボタンが押されたときの処理
+        private void ExitButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            // アプリを完全に終了させる（Win32 APIのフック等も自動で安全に解除されます）
+            System.Windows.Application.Current.Shutdown();
+        }
     }
 }
