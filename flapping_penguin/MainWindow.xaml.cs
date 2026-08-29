@@ -44,7 +44,7 @@ namespace flapping_penguin
             m_KeyboardDetector.Start();
 
             // マウスクリック検知の初期化と開始
-            m_MouseClickDetector = new MouseClickDetector();
+            m_MouseClickDetector = new MouseClickDetector(CatImage);
             m_MouseClickDetector.OnLeftClicked += MouseClickDetector_OnLeftClicked;
             m_MouseClickDetector.OnRightClicked += MouseClickDetector_OnRightClicked;
             m_MouseClickDetector.Start();
@@ -76,14 +76,8 @@ namespace flapping_penguin
         // 右クリックされたときの処理（設定画面を開く）
         private void MouseClickDetector_OnRightClicked()
         {
-            // 設定画面のインスタンスを生成
-            SettingsWindow settingsWin = new SettingsWindow();
-
-            // 親ウィンドウをMainWindowに指定
-            settingsWin.Owner = this;
-
-            // 設定画面をモーダル（手前に固定）で開く
-            settingsWin.ShowDialog();
+            // 設定コントローラーに、自分自身(this)を親ウィンドウとして渡して画面を開かせる
+            m_SettingsController.OpenSettings(this);
         }
 
         // スクロールが検知されたときに呼ばれる処理

@@ -1,43 +1,48 @@
 using System;
-using System.Windows.Forms;
-using Gma.System.MouseKeyHook;
+using System.Windows;
+using System.Windows.Input;
 
 namespace flapping_penguin
 {
-    // マウスクリック検知専用のクラス
+    // マウスクリックを検知する専用のクラス
     public class MouseClickDetector
     {
-        private IKeyboardMouseEvents m_GlobalHook;
-
         public event Action OnLeftClicked;
         public event Action OnRightClicked;
 
-        public void Start()
+        // 監視対象の部品（画像など）を保持する変数
+        private UIElement m_TargetElement;
+
+        // コンストラクタで監視対象を受け取る
+        public MouseClickDetector(UIElement targetElement)
         {
-            m_GlobalHook = Hook.GlobalEvents();
-            m_GlobalHook.MouseClick += GlobalHook_MouseClick;
+            m_TargetElement = targetElement;
         }
 
-        private void GlobalHook_MouseClick(object sender, MouseEventArgs e)
+        public void Start()
         {
-            if (e.Button == MouseButtons.Left)
-            {
-                OnLeftClicked?.Invoke();
-            }
-            else if (e.Button == MouseButtons.Right)
-            {
-                OnRightClicked?.Invoke();
-            }
+            // WPF標準のクリック検知（対象部品の上だけで反応する）
+            m_TargetElement.MouseLeftButtonUp += TargetElement_MouseLeftButtonUp;
+            m_TargetElement.MouseRightButtonUp += TargetElement_MouseRightButtonUp;
         }
 
         public void Stop()
         {
-            if (m_GlobalHook != null)
+            if (m_TargetElement != null)
             {
-                m_GlobalHook.MouseClick -= GlobalHook_MouseClick;
-                m_GlobalHook.Dispose();
-                m_GlobalHook = null;
+                m_TargetElement.MouseLeftButtonUp -= TargetElement_MouseLeftButtonUp;
+                m_TargetElement.MouseRightButtonUp -= TargetElement_MouseRightButtonUp;
             }
+        }
+
+        private void TargetElement_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            OnLeftClicked?.Invoke();
+        }
+
+        private void TargetElement_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            OnRightClicked?.Invoke();
         }
     }
 }
