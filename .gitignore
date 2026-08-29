@@ -478,5 +478,8 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# Inno Setup installer output
+installer/Output/
+
 # Vim temporary swap files
 *.swp
