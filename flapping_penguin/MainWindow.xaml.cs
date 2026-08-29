@@ -76,14 +76,12 @@ namespace flapping_penguin
         // 右クリックされたときの処理（設定画面を開く）
         private void MouseClickDetector_OnRightClicked()
         {
-            // 設定画面のインスタンスを生成
-            SettingsWindow settingsWin = new SettingsWindow();
-
-            // 親ウィンドウをMainWindowに指定
-            settingsWin.Owner = this;
-
-            // 設定画面をモーダル（手前に固定）で開く
-            settingsWin.ShowDialog();
+            // ペンギンの画像（CatImage）の上にマウスカーソルがある時だけ実行する
+            if (CatImage.IsMouseOver)
+            {
+                // 設定コントローラーに、自分自身(this)を親ウィンドウとして渡して画面を開かせる
+                m_SettingsController.OpenSettings(this);
+            }
         }
 
         // スクロールが検知されたときに呼ばれる処理
