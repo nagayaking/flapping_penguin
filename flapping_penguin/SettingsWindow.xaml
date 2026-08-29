@@ -17,5 +17,6 @@
         <TextBlock Text="{Binding Value, ElementName=SpeedSlider}" HorizontalAlignment="Right" />
 
         <Button Content="保存して閉じる" Width="100" Margin="0,20,0,0" Click="SaveButton_Click" />
+        <Button x:Name="ExitButton" Content="アプリを終了する" Height="30" Margin="20" Width="150" Click="ExitButton_Click" />
     </StackPanel>
 </Window>
